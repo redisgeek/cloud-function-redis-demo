@@ -47,7 +47,8 @@ exports.consumer = (req, res) => {
             res.status(500).send(err);
         } else {
             console.log("Found keys.")
-            keys.forEach(function (key,i) {
+            keys.forEach(function (key) {
+                console.log("key: " + key);
                 redisClient.hgetall(key,function (err, engagement){
                     console.log(engagement);
                     mysqlClient.query('INSERT INTO ENGAGED (DeviceId, BranchId, in_out, timestamp) values (' + engagement.deviceId + ',' + engagement.branchId + ',' + engagement.in_out + ',' + engagement.timestamp + ')');
