@@ -25,7 +25,7 @@ exports.consumer = (req, res) => {
             console.log(err);
             res.status(500).send(err);
         } else {
-            console.log("Found " + keys.length + " keys.")
+            console.log("Found keys.")
             keys.forEach(function (key,i) {
                 currentKeys.push(key);
             })
@@ -53,7 +53,7 @@ exports.generator = (req, res) => {
         console.log(`\tCreating hash ${i}`);
 
         let deviceId = uuid.v4();
-        let branchId = uuid.v5();
+        let branchId = uuid.v4();
 
         redisClient.hmset(uuid.v1(), {
             'in_out': 'in',

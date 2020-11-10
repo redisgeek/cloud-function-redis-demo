@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "@google-cloud/functions-framework": "^1.7.1",
     "redis": "^3.0.2",
     "uuid": "^8.3.1"
+  },
+  "scripts": {
+    "start": "functions-framework --target=generator"
   }
 }
