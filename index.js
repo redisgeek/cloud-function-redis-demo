@@ -4,10 +4,9 @@ const uuid = require('uuid');
 let redisHost = process.env.REDIS_HOST;
 let redisPort = process.env.REDIS_PORT;
 let redisPass = process.env.REDIS_PASS;
+let thisMany = process.env.THIS_MANY;
 
 let redisClient = redis.createClient({host: redisHost, port: redisPort, password: redisPass});
-
-const thisMany = 200000;
 
 exports.consumer = (req, res) => {
 
@@ -30,6 +29,7 @@ exports.consumer = (req, res) => {
                     redisClient.del(key);
                 })
             })
+            res.status(200).send("Ding!");
         }
     });
 
