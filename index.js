@@ -18,8 +18,6 @@ exports.consumer = (req, res) => {
         console.log("Error: " + err);
     });
 
-    let currentKeys = [];
-
     redisClient.keys('*', function (err, keys) {
         if (err) {
             console.log(err);
@@ -27,16 +25,13 @@ exports.consumer = (req, res) => {
         } else {
             console.log("Found keys.")
             keys.forEach(function (key,i) {
-                currentKeys.push(key);
+                redisClient.hgetall(key,function (err, engagement){
+                    console.log(engagement);
+                    redisClient.del(key);
+                })
             })
         }
     });
-
-    currentKeys.forEach(function(key){
-        redisClient.hgetall(key,function (err, engagement){
-            console.log(engagement);
-        })
-    })
 
 };
 
