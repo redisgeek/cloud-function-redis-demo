@@ -46,17 +46,20 @@ exports.consumer = (req, res) => {
         } else {
             console.debug("Found keys.")
             keys.forEach(function (key) {
-                redisClient.hgetall(key,function (err, engagement){
-                    let queryStr = `INSERT INTO ENGAGED (DeviceId, BranchId, in_out, timestamp) VALUES (\'${engagement.deviceId}\', \'${engagement.branchId}\', \'${engagement.in_out}\', \'${engagement.timestamp}\')`;
-                    mysqlClient.query(queryStr, function(err, result) {
-                        if (err) {
-                            console.error(err);
-                        } else {
-                            console.trace(key);
-                            redisClient.del(key);
-                        }
-                    });
-                    
+                redisClient.hgetall(key, function (err, engagement) {
+                    if (err) {
+                        console.error("Error: " + err);
+                    } else {
+                        let queryStr = `INSERT INTO ENGAGED (DeviceId, BranchId, in_out, timestamp) VALUES (\'${engagement.deviceId}\', \'${engagement.branchId}\', \'${engagement.in_out}\', \'${engagement.timestamp}\')`;
+                        mysqlClient.query(queryStr, function (err, result) {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                console.trace(key + ":" + result);
+                                redisClient.del(key);
+                            }
+                        });
+                    }
                 })
             })
             console.debug("Iteration complete.");
