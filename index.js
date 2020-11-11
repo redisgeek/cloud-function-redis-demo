@@ -111,6 +111,6 @@ exports.flush = (req, res) => {
         console.error("Error: " + err);
     });
 
-    redisClient.flush();
+    redisClient.flushall();
     res.status(200).send("Flushed! " + (new Date()).getTime());
 }
