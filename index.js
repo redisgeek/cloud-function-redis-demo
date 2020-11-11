@@ -51,6 +51,7 @@ exports.consumer = (req, res) => {
                         console.error("Error: " + err);
                     } else {
                         let queryStr = `INSERT INTO ENGAGED (DeviceId, BranchId, in_out, timestamp) VALUES (\'${engagement.deviceId}\', \'${engagement.branchId}\', \'${engagement.in_out}\', \'${engagement.timestamp}\')`;
+                        console.trace(queryStr);
                         mysqlClient.query(queryStr, function (err, result) {
                             if (err) {
                                 console.error(err);
