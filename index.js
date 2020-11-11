@@ -24,33 +24,29 @@ let mysqlClient = mysql.createConnection({
 
 exports.createTable = (req, res) => {
     mysqlClient.connect();
-
     mysqlClient.query("CREATE TABLE ENGAGED( DeviceID varchar(255), BranchId varchar(255), in_out varchar(255), timestamp varchar(255) )");
-
     res.status(200).send("Table Created");
 }
 
 exports.consumer = (req, res) => {
 
     redisClient.on('connect', function () {
-        console.log('Client Connected to ' + redisHost + ':' + redisPort);
+        console.info('Client Connected to ' + redisHost + ':' + redisPort);
     })
     redisClient.on("error", function (err) {
-        console.log("Error: " + err);
+        console.error("Error: " + err);
     });
 
     mysqlClient.connect();
 
     redisClient.keys('*', function (err, keys) {
         if (err) {
-            console.log(err);
+            console.error(err);
             res.status(500).send(err);
         } else {
-            console.log("Found keys.")
+            console.debug("Found keys.")
             keys.forEach(function (key) {
-                console.log("key: " + key);
                 redisClient.hgetall(key,function (err, engagement){
-                    console.log(engagement);
                     let queryStr = `INSERT INTO ENGAGED (DeviceId, BranchId, in_out, timestamp) VALUES (\'${engagement.deviceId}\', \'${engagement.branchId}\', \'${engagement.in_out}\', \'${engagement.timestamp}\')`;
                     mysqlClient.query(queryStr, function(err, result) {
                         if (err) {
@@ -61,7 +57,7 @@ exports.consumer = (req, res) => {
                                 if(err) {
                                     console.error(err);
                                 }else {
-                                    console.log("Deleted " + key + "(" + reply + ")");
+                                    console.trace("Deleted " + key + "(" + reply + ")");
                                 }
                             });
                         }
@@ -78,14 +74,14 @@ exports.consumer = (req, res) => {
 exports.generator = (req, res) => {
 
     redisClient.on('connect', function () {
-        console.log('Client Connected to ' + redisHost + ':' + redisPort);
+        console.info('Client Connected to ' + redisHost + ':' + redisPort);
     });
     redisClient.on("error", function (err) {
-        console.log("Error: " + err);
+        console.error("Error: " + err);
     });
 
     for (let i = 0; i <= thisMany; i++) {
-        console.log(`\tCreating hash ${i}`);
+        console.trace(`\tCreating hash ${i}`);
 
         let deviceId = uuid.v4();
         let branchId = uuid.v4();
