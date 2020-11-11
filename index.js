@@ -64,7 +64,7 @@ exports.consumer = (req, res) => {
                 })
             })
             console.debug("Iteration complete.");
-            res.status(200).send("Ding!");
+            res.status(200).send("Ding! " + (new Date()).getTime());
         }
     });
 
