@@ -51,8 +51,22 @@ exports.consumer = (req, res) => {
                 console.log("key: " + key);
                 redisClient.hgetall(key,function (err, engagement){
                     console.log(engagement);
-                    mysqlClient.query('INSERT INTO ENGAGED (DeviceId, BranchId, in_out, timestamp) values (' + engagement.deviceId + ',' + engagement.branchId + ',' + engagement.in_out + ',' + engagement.timestamp + ')');
-                    redisClient.del(key);
+                    let queryStr = `INSERT INTO ENGAGED (DeviceId, BranchId, in_out, timestamp) VALUES (\'${engagement.deviceId}\', \'${engagement.branchId}\', \'${engagement.in_out}\', \'${engagement.timestamp}\')`;
+                    mysqlClient.query(queryStr, function(err, result) {
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            console.log(`pushed engagement ${key} to CloudSQL`);
+                            redisClient.del(key, function(err, reply){
+                                if(err) {
+                                    console.error(err);
+                                }else {
+                                    console.log("Deleted " + key + "(" + reply + ")");
+                                }
+                            });
+                        }
+                    });
+                    
                 })
             })
             res.status(200).send("Ding!");
