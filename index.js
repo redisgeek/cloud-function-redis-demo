@@ -52,12 +52,9 @@ exports.consumer = (req, res) => {
                         if (err) {
                             console.error(err);
                         } else {
-                            console.log(`pushed engagement ${key} to CloudSQL`);
                             redisClient.del(key, function(err, reply){
                                 if(err) {
                                     console.error(err);
-                                }else {
-                                    console.trace("Deleted " + key + "(" + reply + ")");
                                 }
                             });
                         }
@@ -65,6 +62,7 @@ exports.consumer = (req, res) => {
                     
                 })
             })
+            console.debug("Iteration complete.");
             res.status(200).send("Ding!");
         }
     });
