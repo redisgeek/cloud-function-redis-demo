@@ -79,7 +79,6 @@ exports.generator = (req, res) => {
     });
 
     for (let i = 0; i <= thisMany; i++) {
-        console.trace(`\tCreating hash ${i}`);
 
         let deviceId = uuid.v4();
         let branchId = uuid.v4();
