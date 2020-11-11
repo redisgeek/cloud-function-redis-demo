@@ -102,3 +102,15 @@ exports.generator = (req, res) => {
 
     res.status(200).send("Successfully created " + thisMany);
 };
+
+exports.flush = (req, res) => {
+    redisClient.on('connect', function () {
+        console.info('Client Connected to ' + redisHost + ':' + redisPort);
+    });
+    redisClient.on("error", function (err) {
+        console.error("Error: " + err);
+    });
+
+    redisClient.flush();
+    res.status(200).send("Flushed! " + (new Date()).getTime());
+}
