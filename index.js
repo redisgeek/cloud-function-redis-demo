@@ -52,11 +52,8 @@ exports.consumer = (req, res) => {
                         if (err) {
                             console.error(err);
                         } else {
-                            redisClient.del(key, function(err, reply){
-                                if(err) {
-                                    console.error(err);
-                                }
-                            });
+                            console.trace(key);
+                            redisClient.del(key);
                         }
                     });
                     
